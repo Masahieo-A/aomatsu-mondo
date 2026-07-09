@@ -8,9 +8,15 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "seed": "tsx scripts/seed.ts"
+    "seed": "tsx scripts/seed.ts",
+    "pipeline:extract": "tsx pipeline/scripts/01_extract.ts",
+    "pipeline:anonymize": "tsx pipeline/scripts/02_anonymize.ts",
+    "pipeline:tag": "tsx pipeline/scripts/03_tag.ts",
+    "pipeline:integrate": "tsx pipeline/scripts/04_integrate.ts",
+    "pipeline:draft": "tsx pipeline/scripts/05_kernel_draft.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.110.0",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.110.1",
     "next": "16.2.10",

@@ -131,6 +131,16 @@ npm test
 | `npm test` | vitestによるユニットテスト実行 |
 | `npm run seed` | 質問データのDB投入（`scripts/seed.ts`） |
 
+## 青松AIコーパスパイプライン
+
+`pipeline/` 配下に、AI対話ログ（Claude/ChatGPT/Gemini）・公開文章・添削差分などの生データから
+青松AIのコーパス4ファイル（ペルソナカーネル・スタイルガイド・事実DB・タスク別few-shot集、いずれも
+`corpus/` 配下でGit管理）を生成する5工程パイプラインがある（抽出→匿名化→タグ付け→統合→カーネル草案生成）。
+匿名化は生徒・保護者・同僚の個人情報を機械+目視の二段階で除去する最重要の安全工程。
+使い方・コスト目安は [`pipeline/README.md`](./pipeline/README.md)、Claude Projectでの運用手順
+（ナレッジ設置・添削差分の記録ループ・月次更新フロー・評価計画）は
+[`docs/phase1-runbook.md`](./docs/phase1-runbook.md) を参照。
+
 ## 技術スタック
 
 - Next.js (App Router) + TypeScript + Tailwind CSS

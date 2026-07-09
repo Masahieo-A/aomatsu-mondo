@@ -44,3 +44,8 @@ next-env.d.ts
 
 # Claude Code ローカル設定
 .claude/
+
+# 青松AIパイプライン: 生データ・中間生成物・匿名化辞書はコミットしない
+pipeline/sources/
+pipeline/work/
+pipeline/private/

@@ -1,0 +1,3 @@
+{"id":"frg_app_000001","source":"app","layer":"thinking","topics":[],"register":null,"confidence":null,"text":"宿題は最小限にしたい。やらされる勉強は身につかないと思う。","context":null,"created_at":null,"origin":"app:ans_0001","anonymized":true}
+{"id":"frg_note_000001","source":"note","layer":null,"topics":[],"register":null,"confidence":null,"text":"文章は短く。一文一意で、読点で粘らずに文を割る。","context":null,"created_at":null,"origin":"texts:note_01#L3","anonymized":true}
+{"id":"frg_claude_000001","source":"claude","layer":null,"topics":[],"register":null,"confidence":null,"text":"AIには結論から率直に相談する。遠回しに聞くと時間の無駄になる。","context":"AI活用の相談","created_at":null,"origin":"claude:conv_ab#12","anonymized":true}

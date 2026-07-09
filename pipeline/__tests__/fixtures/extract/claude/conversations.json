@@ -1,0 +1,55 @@
+[
+  {
+    "uuid": "11111111-2222-3333-4444-555555555555",
+    "name": "個人開発の設計相談",
+    "chat_messages": [
+      {
+        "uuid": "msg-1",
+        "sender": "human",
+        "text": "個人開発でSupabaseを使うか自前のPostgresにするか迷っている。運用の手間と将来の移行コストを天秤にかけて判断したいので、論点を一緒に整理してほしい。",
+        "created_at": "2026-02-01T09:00:00Z"
+      },
+      {
+        "uuid": "msg-2",
+        "sender": "assistant",
+        "text": "主な論点は運用負荷、コスト、ロックインの3つです。Supabaseは初期の運用負荷が小さい一方で…",
+        "created_at": "2026-02-01T09:00:30Z"
+      },
+      {
+        "uuid": "msg-3",
+        "sender": "human",
+        "text": "続けて",
+        "created_at": "2026-02-01T09:01:00Z"
+      },
+      {
+        "uuid": "msg-4",
+        "sender": "human",
+        "text": "ロックインが怖いのは分かるが、個人開発なら『動くものを早く出す』ことの方を私は優先したい。その前提で改めて薦めるならどっち？",
+        "created_at": "2026-02-01T09:02:00Z"
+      }
+    ]
+  },
+  {
+    "uuid": "99999999-8888-7777-6666-555555555555",
+    "name": "壊れた会話",
+    "chat_messages": "not-an-array"
+  },
+  {
+    "uuid": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+    "name": "教材の言い回し",
+    "chat_messages": [
+      {
+        "uuid": "msg-a",
+        "sender": "assistant",
+        "text": "どんな教材を作りたいですか？",
+        "created_at": "2026-02-02T10:00:00Z"
+      },
+      {
+        "uuid": "msg-b",
+        "sender": "human",
+        "text": "高校生向けの確率の導入教材で、賭け事の例を使わずに『期待値』の直感を持たせたい。日常の場面でうまい比喩はないか一緒に考えたい。",
+        "created_at": "2026-02-02T10:01:00Z"
+      }
+    ]
+  }
+]

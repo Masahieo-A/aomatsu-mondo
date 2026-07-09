@@ -1,0 +1,104 @@
+[
+  {
+    "title": "宿題の出し方について",
+    "id": "conv-aaa-111",
+    "create_time": 1704067200.0,
+    "mapping": {
+      "root": {
+        "id": "root",
+        "message": null,
+        "parent": null,
+        "children": ["m1"]
+      },
+      "m1": {
+        "id": "m1",
+        "message": {
+          "author": { "role": "system" },
+          "content": { "parts": ["You are a helpful assistant."] },
+          "create_time": 1704067200.0
+        },
+        "parent": "root",
+        "children": ["m2"]
+      },
+      "m2": {
+        "id": "m2",
+        "message": {
+          "author": { "role": "user" },
+          "content": {
+            "parts": ["生徒に宿題を出すべきか迷っている。宿題は本当に学力を伸ばすのか、それとも作業をこなす習慣をつけるだけなのか、根拠を整理して考えたい。"]
+          },
+          "create_time": 1704067260.0
+        },
+        "parent": "m1",
+        "children": ["m3"]
+      },
+      "m3": {
+        "id": "m3",
+        "message": {
+          "author": { "role": "assistant" },
+          "content": {
+            "parts": ["宿題の教育効果については研究によって結論が分かれています。小学生では相関が弱く、高校生では中程度の相関が報告されています。"]
+          },
+          "create_time": 1704067320.0
+        },
+        "parent": "m2",
+        "children": ["m4"]
+      },
+      "m4": {
+        "id": "m4",
+        "message": {
+          "author": { "role": "user" },
+          "content": { "parts": ["ありがとう"] },
+          "create_time": 1704067380.0
+        },
+        "parent": "m3",
+        "children": ["m5"]
+      },
+      "m5": {
+        "id": "m5",
+        "message": {
+          "author": { "role": "user" },
+          "content": {
+            "parts": ["では量より質だとして、具体的にどういう課題設計なら家庭学習の主体性を引き出せるか、私の考えを言語化する手伝いをしてほしい。"]
+          },
+          "create_time": 1704067440.0
+        },
+        "parent": "m4",
+        "children": []
+      }
+    }
+  },
+  {
+    "title": "壊れた会話",
+    "id": "conv-broken",
+    "mapping": null
+  },
+  {
+    "title": "文章の推敲",
+    "id": "conv-bbb-222",
+    "mapping": {
+      "n0": {
+        "id": "n0",
+        "message": {
+          "author": { "role": "user" },
+          "content": {
+            "parts": ["この一文、もっと余白のある表現にしたい。『私は毎日欠かさず努力を続けています』を、押しつけがましくない言い回しに直したい。"]
+          },
+          "create_time": 1704153600.0
+        },
+        "parent": null,
+        "children": ["n1"]
+      },
+      "n1": {
+        "id": "n1",
+        "message": {
+          "author": { "role": "assistant" },
+          "content": { "parts": ["いくつか案を出します。『続けていられるのは、たぶん習慣の力です』など。"] },
+          "create_time": 1704153660.0
+        },
+        "parent": "n0",
+        "children": []
+      }
+    }
+  }
+]
