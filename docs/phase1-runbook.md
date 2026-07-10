@@ -161,8 +161,9 @@ UC1〜UC3の出力は使うたびに5段階で採点し、`corpus/fewshot/uc<N>.
 
 青松問答v1.0で350問の回答が出揃った日に、最初の一気通貫実行を行う手順。
 
-1. `.env.local` に `ANTHROPIC_API_KEY` が設定されていることを確認する（未設定なら
-   [console.anthropic.com](https://console.anthropic.com/) で取得して追記）。
+1. `.env.local` に `GEMINI_API_KEY` が設定されていることを確認する（未設定なら
+   [aistudio.google.com](https://aistudio.google.com/) → Get API key でクレジットカード不要で発行して追記。
+   パイプラインの既定プロバイダはGeminiで、無料枠で運用できる。詳細: `pipeline/README.md`）。
 2. AI対話ログをエクスポートする（Claude/ChatGPT/Geminiのうち手元にあるもの。②の月次更新フロー
    手順1と同じ）。公開文章・業務文書があれば `pipeline/sources/texts/` に front-matter 付きで配置する。
 3. `pipeline/private/ng-words.txt` を整備する（生徒名・同僚名・学校固有名を1行1語で列挙）。

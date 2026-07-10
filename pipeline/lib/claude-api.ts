@@ -80,8 +80,9 @@ export interface CreateClaudeClientConfig {
 
 // -----------------------------------------------------------------------------
 // .env.local パーサ（scripts/seed.ts と同じ最小実装。dotenv不使用）
+// gemini-api.ts からも使うため export する。
 // -----------------------------------------------------------------------------
-function loadEnvLocal(): Record<string, string> {
+export function loadEnvLocal(): Record<string, string> {
   const path = resolve(process.cwd(), '.env.local');
   let raw: string;
   try {

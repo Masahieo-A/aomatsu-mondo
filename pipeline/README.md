@@ -193,26 +193,38 @@ title: 教えないという教え方
 
 辞書を編集したら、既存レポートは無効になる（`02_anonymize` を引数なしで再実行してレポートを作り直す）。
 
-## ANTHROPIC_API_KEY の設定と概算コスト
+## LLM APIキーの設定と概算コスト
 
-`03_tag` と `05_kernel_draft` のみ Claude API を使用する。`.env.local` に以下を追記する。
+`03_tag` と `05_kernel_draft` のみLLM APIを使用する。**既定プロバイダは Gemini**（無料枠で運用できる）。
+`.env.local` に以下を追記する。
 
 ```
-ANTHROPIC_API_KEY=sk-ant-...
+GEMINI_API_KEY=...
 ```
 
-キーは [console.anthropic.com](https://console.anthropic.com/) → API Keys から取得する。未設定のまま実行すると
-`03_tag` / `05_kernel_draft` は起動時に明確なエラーメッセージで停止する（他の工程はキー不要）。
+キーは [aistudio.google.com](https://aistudio.google.com/) → Get API key から**クレジットカード不要**で発行できる。
+未設定のまま実行すると `03_tag` / `05_kernel_draft` は起動時に明確なエラーメッセージで停止する（他の工程はキー不要）。
+
+### プロバイダとモデル
+
+| 工程 | 既定（Gemini） | 切替（Claude） |
+|---|---|---|
+| 03_tag | `gemini-3.5-flash`（無料枠対象） | `--provider claude` → `claude-sonnet-5` |
+| 05_kernel_draft | `gemini-3.5-flash`（無料枠対象） | `--provider claude` → `claude-fable-5` |
+
+- Geminiの無料枠は **Flash / Flash-Lite 系のみ**（Pro系は有料のみ、2026-07時点）。無料キーはレート制限があるため、
+  `03_tag` で429が続く場合はバッチ間隔が自動リトライで吸収される（それでも止まったら再実行で再開できる）
+- 草案の質を上げたい月は `npm run pipeline:draft -- --target kernel --model gemini-3.1-pro`（有料）や
+  `--provider claude`（`ANTHROPIC_API_KEY` が必要、claude-fable-5）を使う
 
 ### 概算コスト目安
 
-正確な単価は `pipeline/lib/claude-api.ts` の `MODEL_PRICING`（USD / 100万トークン）を参照。実行終了時には
-毎回「消費トークン・概算コスト」がターミナルに表示されるので、そちらが最終的な実額に近い。
+正確な単価は `pipeline/lib/claude-api.ts` / `pipeline/lib/gemini-api.ts` の `MODEL_PRICING`（USD / 100万トークン）を参照。
+実行終了時には毎回「消費トークン・概算コスト」がターミナルに表示される（**無料枠内で収まっていれば実際の請求は$0**。
+表示は有料単価での保守的な概算）。
 
-- **03_tag**（既定 claude-sonnet-5）: AIログ1万断片程度をタグ付けする場合、入力コストはオーダーとして
-  $3〜5程度（バッチ処理・出力はJSONのみで小さいため出力コストは相対的に軽微）。
-- **05_kernel_draft**（既定 claude-fable-5）: materials 一式（最大10万字）+ 現行ドキュメントを読ませて
-  差分草案を生成する1回の実行で、$1〜3程度。月次1回の運用を想定した単価設定（品質最優先）。
+- **03_tag**（gemini-3.5-flash）: AIログ1万断片程度で有料換算$2〜4のオーダー。無料枠のレート制限内なら$0
+- **05_kernel_draft**（gemini-3.5-flash）: 1回$0.5〜2のオーダー（同上）。claude-fable-5利用時は$1〜3程度
 
 ## トラブルシュート
 
@@ -225,7 +237,7 @@ ANTHROPIC_API_KEY=sk-ant-...
 | `04_integrate` が「タグ付け済み断片が見つかりません」で止まる | 先に `npm run pipeline:tag` を実行して `pipeline/work/fragments_tagged.jsonl` を生成する |
 | `04_integrate` が「anonymized=false の断片を除外しました」と警告する | `03_tag` の入力に02未通過の断片が混入している。通常は起きないはずなので `fragments_clean.jsonl` の生成経路を確認する |
 | `05_kernel_draft` が「素材(md)が見つかりません」で止まる | 先に `npm run pipeline:integrate` を実行して `corpus/materials/` を生成する |
-| `ANTHROPIC_API_KEY` が見つからないエラー | `.env.local` に追記されているか確認（`.env.example` 参照）。`03_tag` / `05_kernel_draft` のみ必要 |
+| `GEMINI_API_KEY` / `ANTHROPIC_API_KEY` が見つからないエラー | `.env.local` に追記されているか確認（`.env.example` 参照）。`03_tag` / `05_kernel_draft` のみ必要。既定はGemini、`--provider claude` 指定時のみAnthropicキーが要る |
 | `01_extract --source app` が環境変数エラーで止まる | `.env.local` に `NEXT_PUBLIC_SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` が設定されているか確認 |
 
 ## テスト

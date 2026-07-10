@@ -23,8 +23,18 @@ import {
   buildDraftUserPrompt,
 } from '../lib/prompts';
 import { createClaudeClient, type ClaudeClient } from '../lib/claude-api';
+import { createGeminiClient } from '../lib/gemini-api';
 
 const DEFAULT_MODEL = 'claude-fable-5';
+
+export type Provider = 'gemini' | 'claude';
+/** 既定はGemini（ユーザー決定 2026-07-10）。--provider claude で切替可 */
+export const DEFAULT_PROVIDER: Provider = 'gemini';
+export const PROVIDER_DEFAULT_MODEL: Record<Provider, string> = {
+  // 3.5-flashは無料枠対象。草案の質を上げたい月は --model gemini-3.1-pro（有料）を指定
+  gemini: 'gemini-3.5-flash',
+  claude: DEFAULT_MODEL,
+};
 const MATERIALS_CHAR_BUDGET = 100_000; // materials 合計の上限（先頭から打ち切り）
 const DRAFT_MAX_TOKENS = 32_000; // 草案は長くなり得るので十分大きく
 
@@ -136,9 +146,10 @@ export async function runDraft(deps: RunDraftDeps): Promise<RunDraftResult> {
 // -----------------------------------------------------------------------------
 // CLI
 // -----------------------------------------------------------------------------
-function parseCliArgs(argv: string[]): { target: Target; model?: string } {
+function parseCliArgs(argv: string[]): { target: Target; model?: string; provider: Provider } {
   let target: Target = 'kernel';
   let model: string | undefined;
+  let provider: Provider = DEFAULT_PROVIDER;
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--target') {
@@ -147,15 +158,23 @@ function parseCliArgs(argv: string[]): { target: Target; model?: string } {
       else throw new Error(`--target は kernel または style を指定してください（受領: ${v}）`);
     } else if (a === '--model') {
       model = argv[++i];
+    } else if (a === '--provider') {
+      const v = argv[++i];
+      if (v === 'gemini' || v === 'claude') provider = v;
+      else throw new Error(`--provider は gemini または claude を指定してください（受領: ${v}）`);
     }
   }
-  return { target, model };
+  return { target, model, provider };
 }
 
 async function main(): Promise<void> {
   const args = parseCliArgs(process.argv.slice(2));
-  const client = createClaudeClient();
-  const result = await runDraft({ client, target: args.target, model: args.model });
+  const client = args.provider === 'claude' ? createClaudeClient() : createGeminiClient();
+  const result = await runDraft({
+    client,
+    target: args.target,
+    model: args.model ?? PROVIDER_DEFAULT_MODEL[args.provider],
+  });
 
   console.log(`\n✔ 草案を書き出しました: ${result.outPath}`);
   if (result.truncated) {

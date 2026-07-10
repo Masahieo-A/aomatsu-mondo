@@ -24,8 +24,17 @@ import {
 } from '../lib/fragment';
 import { TAGGING_SYSTEM_PROMPT, buildTaggingUserPrompt } from '../lib/prompts';
 import { createClaudeClient, type ClaudeClient } from '../lib/claude-api';
+import { createGeminiClient } from '../lib/gemini-api';
 
 const DEFAULT_MODEL = 'claude-sonnet-5';
+
+export type Provider = 'gemini' | 'claude';
+/** 既定はGemini（無料枠で回せる。--provider claude で切替可） */
+export const DEFAULT_PROVIDER: Provider = 'gemini';
+export const PROVIDER_DEFAULT_MODEL: Record<Provider, string> = {
+  gemini: 'gemini-3.5-flash', // 無料枠対象のバルク向けモデル
+  claude: DEFAULT_MODEL,
+};
 const DEFAULT_BATCH_SIZE = 20;
 // タグ付けはJSON配列を返すだけなので出力は小さい。バッチ20件でも十分収まる。
 const TAG_MAX_TOKENS = 8000;
@@ -232,8 +241,10 @@ export async function runTagging(deps: RunTaggingDeps): Promise<RunTaggingResult
 // -----------------------------------------------------------------------------
 // CLI
 // -----------------------------------------------------------------------------
-function parseCliArgs(argv: string[]): { model?: string; batchSize?: number } {
-  const out: { model?: string; batchSize?: number } = {};
+function parseCliArgs(argv: string[]): { model?: string; batchSize?: number; provider: Provider } {
+  const out: { model?: string; batchSize?: number; provider: Provider } = {
+    provider: DEFAULT_PROVIDER,
+  };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--model') {
@@ -241,6 +252,10 @@ function parseCliArgs(argv: string[]): { model?: string; batchSize?: number } {
     } else if (a === '--batch-size') {
       const n = Number(argv[++i]);
       if (Number.isFinite(n) && n > 0) out.batchSize = Math.floor(n);
+    } else if (a === '--provider') {
+      const v = argv[++i];
+      if (v === 'gemini' || v === 'claude') out.provider = v;
+      else throw new Error(`--provider は gemini または claude を指定してください（受領: ${v}）`);
     }
   }
   return out;
@@ -248,10 +263,12 @@ function parseCliArgs(argv: string[]): { model?: string; batchSize?: number } {
 
 async function main(): Promise<void> {
   const args = parseCliArgs(process.argv.slice(2));
-  const client = createClaudeClient();
+  // 既定プロバイダは Gemini（無料枠で回せる。ユーザー決定 2026-07-10）。
+  // --provider claude と --model claude-sonnet-5 の組合せで従来動作。
+  const client = args.provider === 'claude' ? createClaudeClient() : createGeminiClient();
   const result = await runTagging({
     client,
-    model: args.model,
+    model: args.model ?? PROVIDER_DEFAULT_MODEL[args.provider],
     batchSize: args.batchSize,
   });
 
